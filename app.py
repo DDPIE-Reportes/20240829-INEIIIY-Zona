@@ -11,7 +11,7 @@ def image_to_base64(image_path):
         return base64.b64encode(img_file.read()).decode("utf-8")
 
 # Función para generar el PDF y guardarlo en un archivo temporal
-def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_path):
+def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_path, filtros):
     pdf = FPDF()
     pdf.add_page()
 
@@ -22,6 +22,14 @@ def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_p
     pdf.set_font("Arial", size=12)
     pdf.set_y(30)  # Ajustar la posición del título para que no se sobreponga al logo
     pdf.cell(200, 10, txt="Resultados por zona - INEIIY 2024", ln=True, align="C")
+    pdf.ln(10)
+
+    # Añadir los filtros aplicados
+    pdf.set_font("Arial", size=10)
+    pdf.cell(200, 10, txt="Filtros Aplicados:", ln=True, align="L")
+    pdf.cell(200, 10, txt=f"Región: {filtros['region']}", ln=True, align="L")
+    pdf.cell(200, 10, txt=f"Modalidad: {filtros['modalidad']}", ln=True, align="L")
+    pdf.cell(200, 10, txt=f"Zona: {filtros['zona']}", ln=True, align="L")
     pdf.ln(10)
 
     # Añadir tablas de frecuencias con porcentaje
@@ -213,10 +221,17 @@ if not df_filtered.empty:
     st.write("**Frecuencia por CCT**")
     st.write(tabla_cct)
 
+    # Crear un diccionario con los filtros aplicados
+    filtros_aplicados = {
+        'region': region_selected,
+        'modalidad': modalidad_selected,
+        'zona': zona_selected
+    }
+
     # Crear botón de descarga de PDF
     st.write("\n\n**Descargar resultados en PDF**")
     file_path = "resultados_por_zona.pdf"  # Nombre temporal del archivo
-    generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_path)
+    generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_path, filtros_aplicados)
     
     # Leer el archivo PDF generado y permitir la descarga
     with open(file_path, "rb") as file:
