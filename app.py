@@ -11,7 +11,7 @@ def image_to_base64(image_path):
         return base64.b64encode(img_file.read()).decode("utf-8")
 
 # Función para generar el PDF y guardarlo en un archivo temporal
-def generar_pdf(escuela, zona, modalidad, tabla_gramatica, tabla_vocabulario, file_path, logo_path):
+def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_path):
     pdf = FPDF()
     pdf.add_page()
 
@@ -22,13 +22,6 @@ def generar_pdf(escuela, zona, modalidad, tabla_gramatica, tabla_vocabulario, fi
     pdf.set_font("Arial", size=12)
     pdf.set_y(30)  # Ajustar la posición del título para que no se sobreponga al logo
     pdf.cell(200, 10, txt="Resultados por zona - INEIIY 2024", ln=True, align="C")
-    pdf.ln(10)
-    
-    # Información de la escuela
-    pdf.set_font("Arial", size=10)
-    pdf.cell(200, 10, txt=f"Escuela: {escuela}", ln=True)
-    pdf.cell(200, 10, txt=f"Zona: {zona}", ln=True)  # Añadir la zona aquí
-    pdf.cell(200, 10, txt=f"Modalidad: {modalidad}", ln=True)
     pdf.ln(10)
 
     # Añadir tablas de frecuencias con porcentaje
@@ -59,9 +52,19 @@ def generar_pdf(escuela, zona, modalidad, tabla_gramatica, tabla_vocabulario, fi
         pdf.cell(40, 10, txt=f"{tabla_vocabulario.iloc[i]['Porcentaje']}", border=1)
         pdf.ln()
     
-    # Ajustar posición para pie de página (10 mm desde el borde inferior)
-    pdf.ln(10)  # Espacio adicional para asegurar que el pie de página esté visible
-
+    pdf.ln(10)
+    
+    # Tabla de CCT
+    pdf.cell(100, 10, txt="Frecuencia por CCT", ln=True)
+    pdf.ln(5)
+    pdf.cell(80, 10, txt="CCT", border=1)
+    pdf.cell(40, 10, txt="Frecuencia", border=1)
+    pdf.ln()
+    for i in range(len(tabla_cct)):
+        pdf.cell(80, 10, txt=f"{tabla_cct.iloc[i]['CCT']}", border=1)
+        pdf.cell(40, 10, txt=f"{tabla_cct.iloc[i]['Frecuencia']}", border=1)
+        pdf.ln()
+    
     # Añadir la leyenda al final de la página
     pdf.set_font("Arial", size=9)
     pdf.multi_cell(0, 10, txt="La información proporcionada en esta página es suministrada por el Centro de Evaluación Educativa del Estado de Yucatán con fines exclusivamente informativos", align='C')
@@ -97,13 +100,6 @@ zona_selected = st.selectbox("Selecciona la Zona:", zona_options)
 df_filtered = df[df['Zona'] == zona_selected]
 
 if not df_filtered.empty:
-    # Mostrar Escuela, Zona y Modalidad asociadas a la selección
-    escuela = df_filtered['Escuela'].iloc[0]
-    modalidad = df_filtered['Modalidad'].iloc[0]
-    st.write(f"**Escuela:** {escuela}")
-    st.write(f"**Zona:** {zona_selected}")
-    st.write(f"**Modalidad:** {modalidad}")
-
     # Filtrar valores no nulos para gráficos
     df_gramatica = df_filtered[df_filtered['Gramática'].notna()]
     df_vocabulario = df_filtered[df_filtered['Vocabulario'].notna()]
@@ -181,10 +177,24 @@ if not df_filtered.empty:
     tabla_vocabulario.columns = ['Nivel', 'Estudiantes']
     tabla_vocabulario['Porcentaje'] = (tabla_vocabulario['Estudiantes'] / freq_vocabulario * 100).round(2).astype(str) + '%'
 
+    # Contar la frecuencia de cada CCT
+    tabla_cct = df_filtered['CCT'].value_counts().reset_index()
+    tabla_cct.columns = ['CCT', 'Frecuencia']
+
+    # Mostrar tablas de frecuencias
+    st.write("**Tabla de Frecuencias: Gramática**")
+    st.write(tabla_gramatica)
+
+    st.write("**Tabla de Frecuencias: Vocabulario**")
+    st.write(tabla_vocabulario)
+
+    st.write("**Frecuencia por CCT**")
+    st.write(tabla_cct)
+
     # Crear botón de descarga de PDF
     st.write("\n\n**Descargar resultados en PDF**")
     file_path = "resultados_por_zona.pdf"  # Nombre temporal del archivo
-    generar_pdf(escuela, zona_selected, modalidad, tabla_gramatica, tabla_vocabulario, file_path, logo_path)
+    generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_path)
     
     # Leer el archivo PDF generado y permitir la descarga
     with open(file_path, "rb") as file:
