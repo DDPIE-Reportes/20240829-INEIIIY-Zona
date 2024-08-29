@@ -21,7 +21,7 @@ def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_p
     # Título principal
     pdf.set_font("Arial", size=12)
     pdf.set_y(30)  # Ajustar la posición del título para que no se sobreponga al logo
-    pdf.cell(200, 10, txt="Resultados por zona - INEIIY 2024", ln=True, align="C")
+    pdf.cell(200, 10, txt="Consulta de información - INEIIY 2024", ln=True, align="C")
     pdf.ln(10)
 
     # Añadir los filtros aplicados
@@ -85,7 +85,7 @@ def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_p
 df = pd.read_csv('Resultados.csv')
 
 # Configuración de la página
-st.set_page_config(page_title="Resultados por zona - INEIIY 2024", layout="wide")
+st.set_page_config(page_title="Consulta de información - INEIIY 2024", layout="wide")
 
 # Convertir la imagen del logo a base64 (opcional)
 logo_path = "logo.png"
@@ -95,7 +95,7 @@ st.markdown(
     f"""
     <div style='text-align: center;'>
         <img src="data:image/png;base64,{image_to_base64(logo_path)}" width="235" height="56" style="margin-bottom: 10px;">
-        <h1>Resultados por zona - INEIIY 2024</h1>
+        <h1>Consulta de información - INEIIY 2024</h1>
     </div>
     """,
     unsafe_allow_html=True
@@ -228,8 +228,8 @@ if not df_filtered.empty:
     }
 
     # Crear botón de descarga de PDF
-    st.write("\n\n**Descargar resultados en PDF**")
-    file_path = "resultados_por_zona.pdf"  # Nombre temporal del archivo
+    st.write("\n\n**Descargar consulta de información en PDF**")
+    file_path = "consulta_de_informacion.pdf"  # Nombre temporal del archivo
     generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_path, filtros_aplicados)
     
     # Leer el archivo PDF generado y permitir la descarga
@@ -239,7 +239,7 @@ if not df_filtered.empty:
     st.download_button(
         label="Descargar PDF",
         data=pdf_data,
-        file_name=f"resultados_zona_{region_selected}.pdf",
+        file_name=f"consulta_de_informacion_{region_selected}.pdf",
         mime="application/pdf"
     )
     
