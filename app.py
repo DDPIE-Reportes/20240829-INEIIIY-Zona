@@ -27,7 +27,6 @@ def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_p
     # Añadir tablas de frecuencias con porcentaje
     pdf.set_font("Arial", size=10)
     
-    # Tabla de Gramática
     pdf.cell(100, 10, txt="Tabla de Frecuencias: Gramática", ln=True)
     pdf.ln(5)
     pdf.cell(80, 10, txt="Nivel", border=1)
@@ -39,9 +38,9 @@ def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_p
         pdf.cell(40, 10, txt=f"{tabla_gramatica.iloc[i]['Estudiantes']}", border=1)
         pdf.cell(40, 10, txt=f"{tabla_gramatica.iloc[i]['Porcentaje']}", border=1)
         pdf.ln()
+    
     pdf.ln(10)
 
-    # Tabla de Vocabulario
     pdf.cell(100, 10, txt="Tabla de Frecuencias: Vocabulario", ln=True)
     pdf.ln(5)
     pdf.cell(80, 10, txt="Nivel", border=1)
@@ -160,19 +159,40 @@ if not df_filtered.empty:
         margin=dict(t=120)
     )
 
-    # Crear dos columnas para las tablas
+    # Crear dos columnas para los gráficos
     col1, col2 = st.columns(2)
 
-    # Mostrar tablas de frecuencias en columnas
+    # Mostrar gráfico de Gramática y Vocabulario
+    with col1:
+        st.plotly_chart(fig_gramatica, use_container_width=True)
+
+    with col2:
+        st.plotly_chart(fig_vocabulario, use_container_width=True)
+
+    # Contar la frecuencia y calcular el porcentaje de cada nivel para Gramática y Vocabulario
+    tabla_gramatica = df_gramatica['Gramática'].value_counts().reindex(categorias_ordenadas, fill_value=0).reset_index()
+    tabla_gramatica.columns = ['Nivel', 'Estudiantes']
+    tabla_gramatica['Porcentaje'] = (tabla_gramatica['Estudiantes'] / freq_gramatica * 100).round(2).astype(str) + '%'
+    
+    tabla_vocabulario = df_vocabulario['Vocabulario'].value_counts().reindex(categorias_ordenadas, fill_value=0).reset_index()
+    tabla_vocabulario.columns = ['Nivel', 'Estudiantes']
+    tabla_vocabulario['Porcentaje'] = (tabla_vocabulario['Estudiantes'] / freq_vocabulario * 100).round(2).astype(str) + '%'
+
+    # Contar la frecuencia de cada CCT
+    tabla_cct = df_filtered['CCT'].value_counts().reset_index()
+    tabla_cct.columns = ['CCT', 'Frecuencia']
+
+    # Mostrar tablas de frecuencias en dos columnas
+    col1, col2 = st.columns(2)
+    
     with col1:
         st.write("**Tabla de Frecuencias: Gramática**")
         st.write(tabla_gramatica)
-
+    
     with col2:
         st.write("**Tabla de Frecuencias: Vocabulario**")
         st.write(tabla_vocabulario)
 
-    # Mostrar tabla de CCT debajo de las tablas de frecuencias
     st.write("**Frecuencia por CCT**")
     st.write(tabla_cct)
 
