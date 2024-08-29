@@ -95,7 +95,7 @@ st.markdown(
     f"""
     <div style='text-align: center;'>
         <img src="data:image/png;base64,{image_to_base64(logo_path)}" width="235" height="56" style="margin-bottom: 10px;">
-        <h1>Consulta de información - INEIIY 2024</h1>
+        <h1>Consulta de información por zona - INEIIY 2024</h1>
     </div>
     """,
     unsafe_allow_html=True
