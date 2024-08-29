@@ -100,26 +100,22 @@ region_selected = st.selectbox("Selecciona la Región:", region_options)
 # Filtrar DataFrame según el valor de Región seleccionado
 df_region_filtered = df[df['Región'] == region_selected]
 
-# Inicializar df_filtered como un DataFrame vacío
-df_filtered = pd.DataFrame()
+# Inicializar df_filtered con df_region_filtered si solo se filtra por Región
+df_filtered = df_region_filtered
 
 # Filtro por Modalidad
 modalidad_options = ["Todos"] + sorted(df_region_filtered['Modalidad'].unique())  # Inicializar con "Todos"
 modalidad_selected = st.selectbox("Selecciona la Modalidad:", modalidad_options)
 
-if modalidad_selected == "Todos":
-    df_modalidad_filtered = df_region_filtered
-else:
-    df_modalidad_filtered = df_region_filtered[df_region_filtered['Modalidad'] == modalidad_selected]
+if modalidad_selected != "Todos":
+    df_filtered = df_filtered[df_filtered['Modalidad'] == modalidad_selected]
 
     # Filtro por Zona solo si se selecciona una modalidad específica
-    zona_options = ["Todos"] + sorted(df_modalidad_filtered['Zona'].unique())  # Inicializar con "Todos"
+    zona_options = ["Todos"] + sorted(df_filtered['Zona'].unique())  # Inicializar con "Todos"
     zona_selected = st.selectbox("Selecciona la Zona:", zona_options)
 
-    if zona_selected == "Todos":
-        df_filtered = df_modalidad_filtered
-    else:
-        df_filtered = df_modalidad_filtered[df_modalidad_filtered['Zona'] == zona_selected]
+    if zona_selected != "Todos":
+        df_filtered = df_filtered[df_filtered['Zona'] == zona_selected]
 
 if not df_filtered.empty:
     # Filtrar valores no nulos para gráficos
@@ -229,7 +225,7 @@ if not df_filtered.empty:
     st.download_button(
         label="Descargar PDF",
         data=pdf_data,
-        file_name=f"resultados_zona_{zona_selected}.pdf",
+        file_name=f"resultados_zona_{region_selected}.pdf",
         mime="application/pdf"
     )
     
