@@ -73,7 +73,7 @@ def generar_pdf(escuela, turno, modalidad, tabla_gramatica, tabla_vocabulario, f
 df = pd.read_csv('Resultados.csv')
 
 # Configuración de la página
-st.set_page_config(page_title="Resultados por escuela - INEIIY 2024", layout="wide")
+st.set_page_config(page_title="Resultados por zona - INEIIY 2024", layout="wide")
 
 # Convertir la imagen del logo a base64 (opcional)
 logo_path = "logo.png"
@@ -83,7 +83,7 @@ st.markdown(
     f"""
     <div style='text-align: center;'>
         <img src="data:image/png;base64,{image_to_base64(logo_path)}" width="235" height="56" style="margin-bottom: 10px;">
-        <h1>Resultados por escuela - INEIIY 2024</h1>
+        <h1>Resultados por zona - INEIIY 2024</h1>
     </div>
     """,
     unsafe_allow_html=True
