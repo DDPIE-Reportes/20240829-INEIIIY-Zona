@@ -104,17 +104,17 @@ df_region_filtered = df[df['Región'] == region_selected]
 df_filtered = df_region_filtered
 
 # Filtro por Modalidad
-modalidad_options = ["Todos"] + sorted(df_region_filtered['Modalidad'].unique())  # Inicializar con "Todos"
+modalidad_options = ["TODOS"] + sorted(df_region_filtered['Modalidad'].unique())  # Inicializar con "TODOS"
 modalidad_selected = st.selectbox("Selecciona la Modalidad:", modalidad_options)
 
-if modalidad_selected != "Todos":
+if modalidad_selected != "TODOS":
     df_filtered = df_filtered[df_filtered['Modalidad'] == modalidad_selected]
 
     # Filtro por Zona solo si se selecciona una modalidad específica
-    zona_options = ["Todos"] + sorted(df_filtered['Zona'].unique())  # Inicializar con "Todos"
+    zona_options = ["TODOS"] + sorted(df_filtered['Zona'].unique())  # Inicializar con "TODOS"
     zona_selected = st.selectbox("Selecciona la Zona:", zona_options)
 
-    if zona_selected != "Todos":
+    if zona_selected != "TODOS":
         df_filtered = df_filtered[df_filtered['Zona'] == zona_selected]
 
 if not df_filtered.empty:
