@@ -222,6 +222,7 @@ if not df_filtered.empty:
     st.write(tabla_cct)
 
     # Crear un diccionario con los filtros aplicados
+    filtros_aplicados = {
         'region': region_selected,
         'modalidad': modalidad_selected,
         'zona': zona_selected
