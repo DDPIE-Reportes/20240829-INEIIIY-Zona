@@ -85,7 +85,7 @@ def generar_pdf(tabla_gramatica, tabla_vocabulario, tabla_cct, file_path, logo_p
 df = pd.read_csv('Resultados.csv')
 
 # Configuración de la página
-st.set_page_config(page_title="Consulta de información - INEIIY 2024", layout="wide")
+st.set_page_config(page_title="Consulta de información por zona - INEIIY 2024", layout="wide")
 
 # Convertir la imagen del logo a base64 (opcional)
 logo_path = "logo.png"
