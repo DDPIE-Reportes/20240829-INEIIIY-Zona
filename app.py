@@ -100,6 +100,9 @@ region_selected = st.selectbox("Selecciona la Región:", region_options)
 # Filtrar DataFrame según el valor de Región seleccionado
 df_region_filtered = df[df['Región'] == region_selected]
 
+# Inicializar df_filtered como un DataFrame vacío
+df_filtered = pd.DataFrame()
+
 # Filtro por Modalidad
 modalidad_options = ["Todos"] + sorted(df_region_filtered['Modalidad'].unique())  # Inicializar con "Todos"
 modalidad_selected = st.selectbox("Selecciona la Modalidad:", modalidad_options)
