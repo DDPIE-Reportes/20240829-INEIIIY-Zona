@@ -102,11 +102,14 @@ st.markdown(
 )
 
 # Filtro por Región
-region_options = sorted(df['Región'].unique())  # Obtener opciones únicas de Región y ordenarlas
+region_options = ["TODOS"] + sorted(df['Región'].unique())  # Añadir "TODOS" al principio de las opciones de Región
 region_selected = st.selectbox("Selecciona la Región:", region_options)
 
 # Filtrar DataFrame según el valor de Región seleccionado
-df_region_filtered = df[df['Región'] == region_selected]
+if region_selected == "TODOS":
+    df_region_filtered = df
+else:
+    df_region_filtered = df[df['Región'] == region_selected]
 
 # Inicializar df_filtered con df_region_filtered si solo se filtra por Región
 df_filtered = df_region_filtered
@@ -119,7 +122,7 @@ if modalidad_selected != "TODOS":
     df_filtered = df_filtered[df_filtered['Modalidad'] == modalidad_selected]
 
 # Filtro por Zona solo si se selecciona una modalidad específica
-zona_options = ["TODOS"] + sorted(df_filtered['Zona'].dropna().unique())  # Inicializar con "TODOS" y eliminar NaNs
+zona_options = ["TODOS"] + sorted(df_filtered['Zona'].unique())  # Inicializar con "TODOS"
 zona_selected = st.selectbox("Selecciona la Zona:", zona_options)
 
 if zona_selected != "TODOS":
