@@ -119,7 +119,7 @@ if modalidad_selected != "TODOS":
     df_filtered = df_filtered[df_filtered['Modalidad'] == modalidad_selected]
 
 # Filtro por Zona solo si se selecciona una modalidad específica
-zona_options = ["TODOS"] + sorted(df_filtered['Zona'].unique())  # Inicializar con "TODOS"
+zona_options = ["TODOS"] + sorted(df_filtered['Zona'].dropna().unique())  # Inicializar con "TODOS" y eliminar NaNs
 zona_selected = st.selectbox("Selecciona la Zona:", zona_options)
 
 if zona_selected != "TODOS":
